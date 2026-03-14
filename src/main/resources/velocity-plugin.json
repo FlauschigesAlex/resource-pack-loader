@@ -1,0 +1,9 @@
+{
+    "id": "resource-pack-loader",
+    "name": "${project.artifactId}",
+    "version": "${project.version}",
+    "authors": [
+        "FlauschigesAlex"
+    ],
+    "main": "at.flauschigesalex.resource_pack_loader.minecraft.velocity.ResourceLoaderVelocity"
+}

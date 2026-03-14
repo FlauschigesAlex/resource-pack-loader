@@ -1,0 +1,7 @@
+name: '${project.artifactId}'
+version: '${project.version}'
+api-version: "1.21"
+main: at.flauschigesalex.resource_pack_loader.minecraft.paper.ResourceLoaderPaper
+authors:
+  - "FlauschigesAlex"
+website: "flauschigesalex.at"
