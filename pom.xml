@@ -6,7 +6,7 @@
 
     <groupId>at.flauschigesalex</groupId>
     <artifactId>resource-pack-loader</artifactId>
-    <version>1.0.0</version>
+    <version>1.0.1</version>
 
     <properties>
         <kotlin.version>2.3.0</kotlin.version>

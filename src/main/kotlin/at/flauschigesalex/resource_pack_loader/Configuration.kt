@@ -43,7 +43,7 @@ object Configuration {
             this.saveConfig(false)
         }
         
-        if (!file.exists) file.createJsonFile()
+        file.createFile()
         file.write(json)
     }
 

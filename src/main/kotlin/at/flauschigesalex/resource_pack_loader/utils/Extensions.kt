@@ -24,7 +24,7 @@ internal lateinit var dataFolder: File
 internal suspend fun Audience.sendServerResourcePacks(): Boolean {
     val packs = Configuration.packs
     if (packs.isEmpty()) return true
-    
+
     return this.sendResourcePacks(packs, Configuration.isReplace, Configuration.isRequired, Configuration.prompt)
 }
 suspend fun Audience.sendResourcePacks(data: Set<ResourcePackData>, replace: Boolean, required: Boolean, prompt: Component? = null): Boolean {
@@ -38,7 +38,10 @@ suspend fun Audience.sendResourcePacks(data: Set<ResourcePackData>, replace: Boo
         .required(required)
         .prompt(prompt)
     
-    this.sendResourcePacks(request)
+    runCatching {
+        this.sendResourcePacks(request)
+    }.onFailure { return false }
+    
     return true
 }
 
