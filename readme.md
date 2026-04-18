@@ -2,8 +2,8 @@
 A simple solution to handle resource packs on paper and velocity.
 
 ### Supported platforms & versions
-- [Paper](https://papermc.io/software/paper/) Versions: 1.21.11
-- [Velocity](https://velocitypowered.com/) Versions: 3.5.0
+- [Paper](https://papermc.io/software/paper/) Versions: 1.21.10 - 1.21.11
+- [Velocity](https://velocitypowered.com/) Versions: 3.4.0 - 3.5.0
 
 Although resource-pack-loader may work on other platforms or versions, I do not guarantee for their stability or functionality.
 
