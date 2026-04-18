@@ -37,8 +37,9 @@ object Commands {
                 runCatching {
                     ResourceLoaderPaper.instance // ASSERT THAT SERVER IS PAPER
                     this@argument.argument("paper_player", PaperPlayerArgumentType.player()) {
-                        this.execute { sender, _, data, _ ->
-                            val player = data.byType<PaperPlayer>()?.value ?: return@execute
+                        this.execute { context ->
+                            val sender = context.sender
+                            val player = context.arguments.byType<PaperPlayer>("paper_player")?.value ?: return@execute
 
                             scheduleAsync {
                                 ResourcePackData.deleteCached()
@@ -51,8 +52,9 @@ object Commands {
                 runCatching {
                     ResourceLoaderVelocity.instance // ASSERT THAT SERVER IS VELOCITY
                     this@argument.argument("proxied_player", VelocityPlayerArgumentType.player()) {
-                        this.execute { sender, _, data, _ ->
-                            val player = data.byType<ProxyPlayer>()?.value ?: return@execute
+                        this.execute { context ->
+                            val sender = context.sender
+                            val player = context.arguments.byType<ProxyPlayer>("proxied_player")?.value ?: return@execute
 
                             scheduleAsync {
                                 ResourcePackData.deleteCached()
@@ -63,7 +65,8 @@ object Commands {
                     }
                 }
 
-                this.execute { sender, _, _, _ ->
+                this.execute { context ->
+                    val sender = context.sender
                     scheduleAsync {
                         ResourcePackData.deleteCached()
                         val list: List<Audience>? = runCatching {
