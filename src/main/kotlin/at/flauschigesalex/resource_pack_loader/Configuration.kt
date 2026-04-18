@@ -13,7 +13,7 @@ object Configuration {
     const val VERSION = 1
     
     private val file = FileManager(dataFolder, "config.json").apply { 
-        if (!this.exists) this@Configuration.createConfig()
+        if (!this.exists) createFile()
     }
     private val json = file.readJson() ?: JsonManager()
 
