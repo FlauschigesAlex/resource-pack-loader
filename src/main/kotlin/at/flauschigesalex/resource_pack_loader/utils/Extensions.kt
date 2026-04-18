@@ -19,6 +19,7 @@ internal fun scheduleAsync(block: suspend (CoroutineScope) -> Unit) {
     scope.launch { block(this) }
 }
 
+internal const val bStatsPluginId: Int = 30814
 internal lateinit var dataFolder: File
 
 internal suspend fun Audience.sendServerResourcePacks(): Boolean {
