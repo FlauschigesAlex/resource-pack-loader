@@ -36,6 +36,7 @@ class ResourceLoaderVelocity @Inject constructor(val server: ProxyServer,
         FlauschigeLibraryVelocity.init(this, server, javaClass.packageName)
         Commands // LOAD COMMANDS
         
+        // BEGIN BSTATS
         val metrics = bStats.make(this, 30814)
 
         metrics.addCustomChart(SimplePie("server_brand") { server.version.name })

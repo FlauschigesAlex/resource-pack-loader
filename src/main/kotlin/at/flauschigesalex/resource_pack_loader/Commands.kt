@@ -5,14 +5,11 @@ import at.flauschigesalex.lib.minecraft.brigadier.types.internal.LiteralArgument
 import at.flauschigesalex.resource_pack_loader.data.ResourcePackData
 import at.flauschigesalex.resource_pack_loader.minecraft.paper.ResourceLoaderPaper
 import at.flauschigesalex.resource_pack_loader.minecraft.velocity.ResourceLoaderVelocity
-import at.flauschigesalex.resource_pack_loader.minecraft.utils.PrefixType
-import at.flauschigesalex.resource_pack_loader.minecraft.utils.locale
-import at.flauschigesalex.resource_pack_loader.minecraft.utils.sendMiniMessage
-import at.flauschigesalex.resource_pack_loader.utils.Messages
 import at.flauschigesalex.resource_pack_loader.utils.PaperPlayer
 import at.flauschigesalex.resource_pack_loader.utils.ProxyPlayer
 import at.flauschigesalex.resource_pack_loader.utils.scheduleAsync
 import at.flauschigesalex.resource_pack_loader.utils.sendServerResourcePacks
+import at.flauschigesalex.resource_pack_loader.utils.sendTranslated
 import net.kyori.adventure.audience.Audience
 import at.flauschigesalex.lib.minecraft.paper.base.command.types.PlayerArgumentType as PaperPlayerArgumentType
 import at.flauschigesalex.lib.minecraft.velocity.base.command.types.PlayerArgumentType as VelocityPlayerArgumentType
@@ -44,7 +41,7 @@ object Commands {
                             scheduleAsync {
                                 ResourcePackData.deleteCached()
                                 player.sendServerResourcePacks()
-                                sender.sendMiniMessage(Messages.translate(sender.locale, "rpl.reload.single", player.name))
+                                sender.sendTranslated("rpl.reload.single", player.name)
                             }
                         }
                     }
@@ -59,7 +56,7 @@ object Commands {
                             scheduleAsync {
                                 ResourcePackData.deleteCached()
                                 player.sendServerResourcePacks()
-                                sender.sendMiniMessage(Messages.translate(sender.locale, "rpl.reload.single", player.username))
+                                sender.sendTranslated("rpl.reload.single", player.username)
                             }
                         }
                     }
@@ -85,14 +82,13 @@ object Commands {
 
                         val size = list?.size ?: 0
                         if (size == 0) {
-                            sender.sendMiniMessage(
-                                Messages.translate(sender.locale, "rpl.reload.none"),
-                                PrefixType.WARN
-                            )
+                            sender.sendTranslated("rpl.reload.none") {
+                                "<yellow>$it"
+                            }
                             return@scheduleAsync
                         }
 
-                        sender.sendMiniMessage(Messages.translate(sender.locale, "rpl.reload.num", size))
+                        sender.sendTranslated("rpl.reload.num", size)
                     }
                 }
             }

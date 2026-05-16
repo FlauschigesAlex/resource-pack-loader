@@ -23,6 +23,7 @@ class ResourceLoaderPaper: JavaPlugin() {
         FlauschigeLibraryPaper.init(this, javaClass.packageName)
         Commands // LOAD COMMANDS
 
+        // BEGIN BSTATS
         val metrics = Metrics(this, 31064)
 
         metrics.addCustomChart(SimplePie("server_brand") { Bukkit.getServer().name })
