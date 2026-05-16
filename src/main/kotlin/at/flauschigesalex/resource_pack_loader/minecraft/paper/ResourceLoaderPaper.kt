@@ -2,6 +2,9 @@ package at.flauschigesalex.resource_pack_loader.minecraft.paper
 
 import at.flauschigesalex.lib.minecraft.paper.base.FlauschigeLibraryPaper
 import at.flauschigesalex.resource_pack_loader.Commands
+import at.flauschigesalex.resource_pack_loader.utils.scheduleAsync
+import at.flauschigesalex.resource_pack_loader.version.VersionChecker
+import at.flauschigesalex.resource_pack_loader.version.sendNewerVersionMessage
 import org.bstats.bukkit.Metrics
 import org.bstats.charts.SimplePie
 import org.bukkit.Bukkit
@@ -28,5 +31,14 @@ class ResourceLoaderPaper: JavaPlugin() {
 
         metrics.addCustomChart(SimplePie("server_brand") { Bukkit.getServer().name })
         metrics.addCustomChart(SimplePie("server_version") { Bukkit.getServer().minecraftVersion })
+        
+        // BEGIN VERSION CHECKER
+        scheduleAsync {
+            VersionChecker.checkVersion(Bukkit.getServer().minecraftVersion, this.pluginMeta.version).onSuccess { changes ->
+                changes?.let { changes ->
+                    Bukkit.getConsoleSender().sendNewerVersionMessage(changes)
+                }
+            }.onFailure { it.printStackTrace() }
+        }
     }
 }
