@@ -1,0 +1,13 @@
+{
+  "_version": 1,
+  "useCommand": true,
+  "required": false,
+  "replace": false,
+  "prompt": "<yellow><b>This server recommends a resource pack",
+  "packs": [
+    {
+      "_id": "00000000-0000-0000-0000-000000000000",
+      "url": "https://example.com/resource.zip"
+    }
+  ]
+}
