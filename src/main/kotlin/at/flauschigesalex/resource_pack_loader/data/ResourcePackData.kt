@@ -22,8 +22,6 @@ class ResourcePackData private constructor(private val json: JsonManager) {
                 return null
 
             val data = ResourcePackData(json)
-            if (data.url == DEFAULT_URL) return null
-
             return data
         }
         operator fun invoke(id: UUID, url: String): ResourcePackData {
@@ -42,6 +40,8 @@ class ResourcePackData private constructor(private val json: JsonManager) {
 
     val id: UUID = json.getUUID("_id") ?: throw IllegalArgumentException("'_id' cannot be null or empty")
     val url: String = json.getString("url") ?: throw IllegalArgumentException("'url' cannot be null or empty")
+    
+    internal val isDefault: Boolean = url == DEFAULT_URL
 
     private var _cached: ResourcePackInfo? = null
     fun deleteCache() {
@@ -58,7 +58,7 @@ class ResourcePackData private constructor(private val json: JsonManager) {
             val connection = HttpRequestHandler(url).get(HttpResponse.BodyHandlers.ofByteArray())
                 ?: throw Exception("Could not connect to uri: $url")
 
-            val bytes = connection.body() ?: throw Exception("Could not get body from ur.: $url")
+            val bytes = connection.body() ?: throw Exception("Could not get body from url: $url")
             val tempFile = createTempFile(prefix = id.toString(), suffix = ".zip")
             Files.write(tempFile, bytes)
 

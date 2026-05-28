@@ -17,10 +17,10 @@ internal suspend fun Audience.sendServerResourcePacks(): Boolean {
 suspend fun Audience.sendResourcePacks(data: Set<ResourcePackData>, replace: Boolean, required: Boolean, prompt: Component? = null): Boolean {
     if (data.isEmpty()) return false
     
-    val mapped = data.mapNotNull { it.toResourcePackInfo() }
-    if (mapped.isEmpty()) return false
+    val packs = data.filterNot { it.isDefault }.mapNotNull { it.toResourcePackInfo() }
+    if (packs.isEmpty()) return false
     
-    val request = ResourcePackRequest.resourcePackRequest().packs(mapped)
+    val request = ResourcePackRequest.resourcePackRequest().packs(packs)
         .replace(replace)
         .required(required)
         .prompt(prompt)
