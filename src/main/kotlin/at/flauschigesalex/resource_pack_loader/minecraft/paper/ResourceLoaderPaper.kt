@@ -2,13 +2,14 @@ package at.flauschigesalex.resource_pack_loader.minecraft.paper
 
 import at.flauschigesalex.lib.minecraft.paper.base.FlauschigeLibraryPaper
 import at.flauschigesalex.resource_pack_loader.Commands
+import at.flauschigesalex.resource_pack_loader.utils.Commons
+import at.flauschigesalex.resource_pack_loader.utils.Commons.slug
 import at.flauschigesalex.resource_pack_loader.utils.scheduleAsync
-import at.flauschigesalex.resource_pack_loader.version.VersionChecker
-import at.flauschigesalex.resource_pack_loader.version.sendNewerVersionMessage
+import at.flauschigesalex.resource_pack_loader.utils.sendNewerVersionMessage
+import at.flauschigesalex.rinth.version.checker.VersionChecker
+import at.flauschigesalex.rinth.version.listener.PaperVersionUpdateListener
+import at.flauschigesalex.rinth.version.onChanges
 import org.bstats.bukkit.Metrics
-import org.bstats.charts.SimplePie
-import org.bukkit.Bukkit
-import at.flauschigesalex.resource_pack_loader.utils.dataFolder as internalDataFolder
 import org.bukkit.plugin.java.JavaPlugin
 
 @Suppress("unused", "UNUSED_EXPRESSION")
@@ -20,7 +21,7 @@ class ResourceLoaderPaper: JavaPlugin() {
     }
     
     override fun onEnable() {
-        internalDataFolder = this.dataFolder
+        Commons.dataFolder = this.dataFolder
         
         instance = this
         FlauschigeLibraryPaper.init(this, javaClass.packageName)
@@ -28,17 +29,16 @@ class ResourceLoaderPaper: JavaPlugin() {
 
         // BEGIN BSTATS
         val metrics = Metrics(this, 31064)
-
-        metrics.addCustomChart(SimplePie("server_brand") { Bukkit.getServer().name })
-        metrics.addCustomChart(SimplePie("server_version") { Bukkit.getServer().minecraftVersion })
         
         // BEGIN VERSION CHECKER
-        scheduleAsync {
-            VersionChecker.checkVersion(Bukkit.getServer().minecraftVersion, this.pluginMeta.version).onSuccess { changes ->
-                changes?.let { changes ->
-                    Bukkit.getConsoleSender().sendNewerVersionMessage(changes)
-                }
-            }.onFailure { it.printStackTrace() }
+        PaperVersionUpdateListener(this) { audience -> 
+            scheduleAsync {
+                VersionChecker.check(slug).currentVersionDiff(this).onSuccess { changes ->
+                    changes.onChanges {
+                        audience.sendNewerVersionMessage(this)
+                    }
+                }.onFailure { it.printStackTrace() }
+            }
         }
     }
 }

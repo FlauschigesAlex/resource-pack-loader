@@ -2,25 +2,11 @@ package at.flauschigesalex.resource_pack_loader.utils
 
 import at.flauschigesalex.resource_pack_loader.Configuration
 import at.flauschigesalex.resource_pack_loader.data.ResourcePackData
-import com.velocitypowered.api.proxy.Player as ProxyPlayer
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.SupervisorJob
-import kotlinx.coroutines.launch
 import net.kyori.adventure.audience.Audience
 import net.kyori.adventure.resource.ResourcePackRequest
 import net.kyori.adventure.text.Component
+import com.velocitypowered.api.proxy.Player as ProxyPlayer
 import org.bukkit.entity.Player as PaperPlayer
-import java.io.File
-
-private val asyncExecutor = SupervisorJob() + Dispatchers.IO
-private val scope = CoroutineScope(asyncExecutor)
-internal fun scheduleAsync(block: suspend (CoroutineScope) -> Unit) {
-    scope.launch { block(this) }
-}
-
-internal const val bStatsPluginId: Int = 30814
-internal lateinit var dataFolder: File
 
 internal suspend fun Audience.sendServerResourcePacks(): Boolean {
     val packs = Configuration.packs

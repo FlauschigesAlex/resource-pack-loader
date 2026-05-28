@@ -5,15 +5,14 @@ import at.flauschigesalex.lib.base.file.JsonManager
 import at.flauschigesalex.lib.base.file.ResourceManager
 import at.flauschigesalex.lib.base.file.readJson
 import at.flauschigesalex.resource_pack_loader.data.ResourcePackData
-import at.flauschigesalex.resource_pack_loader.utils.dataFolder
+import at.flauschigesalex.resource_pack_loader.utils.Commons
 import at.flauschigesalex.resource_pack_loader.utils.scheduleAsync
 import net.kyori.adventure.text.minimessage.MiniMessage
 
 object Configuration {
-    @Deprecated("Internal")
-    const val VERSION = 1
+    internal const val VERSION = 1
 
-    private val file = FileManager(dataFolder, "config.json")
+    private val file = FileManager(Commons.dataFolder, "config.json")
     private var json = file.readJson() ?: JsonManager()
 
     @Deprecated("Internal")
@@ -21,7 +20,6 @@ object Configuration {
 
     init {
         this.attemptCreateConfig()
-        this.updateConfig()
     }
 
     val packs = json.getJson("packs")?.let { ResourcePackData(it) }?.let { setOf(it) }
@@ -46,7 +44,6 @@ object Configuration {
         file.write(json)
     }
 
-    @Suppress("DEPRECATION")
     private fun attemptCreateConfig() {
         if (file.file.isDirectory)
             file.delete()
@@ -62,13 +59,5 @@ object Configuration {
 
         json.putIfAbsent("_version", VERSION)
         file.write(json)
-    }
-
-    @Suppress("DEPRECATION")
-    @Deprecated("Reserved for future use")
-    private fun updateConfig() {
-        if (configVersion >= VERSION) return
-
-        throw UnsupportedOperationException()
     }
 }
