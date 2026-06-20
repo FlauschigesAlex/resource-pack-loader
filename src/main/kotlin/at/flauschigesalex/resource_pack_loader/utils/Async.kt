@@ -8,6 +8,6 @@ import kotlinx.coroutines.launch
 
 private val asyncExecutor = SupervisorJob() + Dispatchers.IO
 private val scope = CoroutineScope(asyncExecutor)
-internal fun scheduleAsync(block: suspend (CoroutineScope) -> Unit) {
-    scope.launch { block(this) }
-}
+internal fun scheduleAsync(block: suspend () -> Unit) = runCatching {
+    scope.launch { block() }
+}.onFailure { it.printStackTrace() }

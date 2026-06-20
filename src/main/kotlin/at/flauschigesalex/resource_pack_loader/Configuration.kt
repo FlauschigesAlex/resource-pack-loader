@@ -7,37 +7,53 @@ import at.flauschigesalex.lib.base.file.readJson
 import at.flauschigesalex.resource_pack_loader.data.ResourcePackData
 import at.flauschigesalex.resource_pack_loader.utils.Commons
 import at.flauschigesalex.resource_pack_loader.utils.scheduleAsync
+import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.minimessage.MiniMessage
 
 object Configuration {
     internal const val VERSION = 1
 
     private val file = FileManager(Commons.dataFolder, "config.json")
-    private var json = file.readJson() ?: JsonManager()
-
-    @Deprecated("Internal")
-    internal val configVersion: Int = json.getInt("_version") ?: 1
+    private lateinit var json: JsonManager
 
     init {
         this.attemptCreateConfig()
+        this.reloadConfig()
     }
 
-    val packs = json.getJson("packs")?.let { ResourcePackData(it) }?.let { setOf(it) }
-        ?: json.getJsonList("packs").mapNotNull { ResourcePackData(it) }.toSet()
+    fun reloadConfig() {
+        json = file.readJson() ?: JsonManager()
+    }
 
-    val isRequired: Boolean = json.getBoolean("required") ?: false
-    val isReplace: Boolean = json.getBoolean("replace") ?: false
+    @Deprecated("Internal")
+    internal val configVersion: Int
+        get() = json.getInt("_version") ?: 1
 
-    internal val richPrompt: String? = json.getString("prompt")
-    val prompt = richPrompt?.let { MiniMessage.miniMessage().deserialize(it) }
+    val packs: Set<ResourcePackData>
+        get() = json.getJson("packs")?.let { ResourcePackData(it) }?.let { setOf(it) }
+            ?: json.getJsonList("packs").mapNotNull { ResourcePackData(it) }.toSet()
 
-    val useCommand: Boolean = json.getBoolean("useCommand") ?: true
+    val isRequired: Boolean
+        get() = json.getBoolean("required") ?: false
+    
+    val isReplace: Boolean
+        get() = json.getBoolean("replace") ?: false
+
+    internal val richPrompt: String?
+        get()  = json.getString("prompt")
+    
+    val prompt: Component?
+        get() = richPrompt?.let { MiniMessage.miniMessage().deserialize(it) }
+
+    val useCommand: Boolean
+        get() = json.getBoolean("useCommand") ?: true
 
     fun saveConfig(async: Boolean) {
         if (json.isOriginalContent()) return
 
-        if (async) return scheduleAsync {
-            this.saveConfig(false)
+        if (async) {
+            scheduleAsync { this.saveConfig(false) }
+            return
         }
 
         file.createFile()

@@ -33,8 +33,9 @@ class ResourcePackData private constructor(private val json: JsonManager) {
             return this.invoke(json)!!
         }
 
-        fun deleteCached() = Configuration.packs.forEach {
-            it.deleteCache()
+        fun deleteCached() {
+            Configuration.reloadConfig()
+            Configuration.packs.forEach { it.deleteCache() }
         }
     }
 
