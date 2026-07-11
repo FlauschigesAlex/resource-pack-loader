@@ -1,6 +1,6 @@
 package at.flauschigesalex.resource_pack_loader.data
 
-import at.flauschigesalex.lib.base.file.JsonManager
+import at.flauschigesalex.lib.base.file.json.JsonManager
 import at.flauschigesalex.lib.base.general.HttpRequestHandler
 import at.flauschigesalex.resource_pack_loader.Configuration
 import net.kyori.adventure.resource.ResourcePackInfo
@@ -49,9 +49,11 @@ class ResourcePackData private constructor(private val json: JsonManager) {
         _cached = null
     }
 
+    fun toResourcePackInfoCached(): ResourcePackInfo? = _cached
+    
     suspend fun toResourcePackInfo(): ResourcePackInfo? {
-        _cached?.run {
-            return this
+        this.toResourcePackInfoCached()?.let { 
+            return it
         }
 
         val result = runCatching {

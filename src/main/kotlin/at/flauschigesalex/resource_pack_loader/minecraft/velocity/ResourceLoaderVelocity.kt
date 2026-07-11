@@ -7,10 +7,9 @@ import at.flauschigesalex.resource_pack_loader.utils.Commons
 import at.flauschigesalex.resource_pack_loader.utils.Commons.slug
 import at.flauschigesalex.resource_pack_loader.utils.scheduleAsync
 import at.flauschigesalex.resource_pack_loader.utils.sendNewerVersionMessage
-import at.flauschigesalex.rinth.version.checker.VersionChecker
-import at.flauschigesalex.rinth.version.listener.PaperVersionUpdateListener
-import at.flauschigesalex.rinth.version.listener.VelocityVersionUpdateListener
-import at.flauschigesalex.rinth.version.onChanges
+import at.flauschigesalex.rinth.project.version.listener.VelocityVersionUpdateListener
+import at.flauschigesalex.rinth.project.version.onChanges
+import at.flauschigesalex.rinth.utils.checker.version.VersionChecker
 import com.google.inject.Inject
 import com.velocitypowered.api.event.Subscribe
 import com.velocitypowered.api.event.proxy.ProxyInitializeEvent
@@ -49,7 +48,7 @@ class ResourceLoaderVelocity @Inject constructor(
         // BEGIN VERSION CHECKER
         VelocityVersionUpdateListener(server, this) { audience ->
             scheduleAsync {
-                VersionChecker.check(slug).currentVersionDiff(server).onSuccess { changes ->
+                VersionChecker.check(slug, this.channel).currentVersionDiff(server).onSuccess { changes ->
                     changes.onChanges {
                         audience.sendNewerVersionMessage(this)
                     }
