@@ -33,7 +33,7 @@ class ResourceLoaderPaper: JavaPlugin() {
         // BEGIN VERSION CHECKER
         PaperVersionUpdateListener(this) { audience -> 
             scheduleAsync {
-                VersionChecker.check(slug, this.channel).currentVersionDiff(this).onSuccess { changes ->
+                VersionChecker.check(slug, this.channel).currentVersionDiff(instance).onSuccess { changes ->
                     changes.onChanges {
                         audience.sendNewerVersionMessage(this)
                     }
